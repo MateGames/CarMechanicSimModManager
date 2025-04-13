@@ -7,6 +7,7 @@ import win32gui
 import win32con
 import win32api
 
+
 # variables
 width = 600 
 height = 400
@@ -49,52 +50,90 @@ def setup():
 
 
 
-class KillApp():
-    def __init__(self) -> None:
+class KillApp:
+    def __init__(self,button) -> None:
         self.start = 0
         self.kill = False
+        self.timeout = 2
+        self.button = button
+        
         
     def update(self):
-        if is_pressed("t") and not self.kill:
+        if is_pressed(self.button) and not self.kill:
             self.start = time()
             self.kill = True
         
-        if not is_pressed("t"):
+        if not is_pressed(self.button):
             self.kill = False  
 
-
-        if time() - self.start > 3 and self.kill:
+        if time() - self.start > self.timeout and self.kill:
             return False
         
         return True
-
-
-
-
-
-
-screen = setup()
-killApp = KillApp()
-
-run = True
-while run:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-
-    # update
-    run = killApp.update()    
     
     
-
-    # display
-    screen.fill((0, 0, 0))
-    
-    
-    pygame.draw.rect(screen,(200,0,0),(0,0,width,height),2) # temp boundary
+    def display(self):
+        if self.kill:
+            pygame.draw.line(screen, (222,0,0), (0,0), (0,(time() - self.start) / self.timeout * height),10)
 
 
 
-    pygame.display.update()
-pygame.quit()
+
+
+
+
+
+
+
+class Helo():
+    def update():
+        ...
+        
+    def display():
+        ...
+
+
+
+
+
+
+
+
+
+
+class App:
+    def __init__(self, screen) -> None:
+        self.scene = Helo()
+        self.screen = screen
+
+
+    def run(self):
+        run = True
+        while run:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+
+            # update
+            #run = killApp.update()    
+            
+            
+
+            # display
+            self.screen.fill((0, 0, 0))
+            #killApp.display()
+            
+            pygame.draw.rect(self.screen,(10,10,10),(0,0,width,height),1) # temp boundary
+
+
+
+            pygame.display.update()
+        pygame.quit()
+
+
+
+if __name__ == "__main__":
+    screen = setup()
+    app = App(screen)
+    app.run()
