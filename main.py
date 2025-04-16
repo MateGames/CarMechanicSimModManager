@@ -1,6 +1,6 @@
 import pygame
 import os
-from time import sleep, time
+from time import time #sleep: DONT USE SLEEP, FREEZ RUNING PROGRAM!!!!!!!!! 
 from keyboard import wait, is_pressed
 from pyautogui import press, write
 import win32gui
@@ -9,8 +9,8 @@ import win32api
 
 
 # variables
-width = 600 
-height = 400
+width = 300
+height = 200
 
 
 
@@ -23,7 +23,7 @@ height = 400
 
 def setup():
     screen_width = 2560
-    x = screen_width - width
+    x = 0
     y = 0
 
     os.environ['SDL_VIDEO_WINDOW_POS'] = f"{x},{y}"
@@ -58,7 +58,7 @@ class KillApp:
         self.button = button
         
         
-    def update(self):
+    def update(self) -> bool:
         if is_pressed(self.button) and not self.kill:
             self.start = time()
             self.kill = True
@@ -72,7 +72,7 @@ class KillApp:
         return True
     
     
-    def display(self):
+    def display(self) -> None:
         if self.kill:
             pygame.draw.line(screen, (222,0,0), (0,0), (0,(time() - self.start) / self.timeout * height),10)
 
@@ -101,14 +101,36 @@ class Helo():
 
 
 
+class AutoBuy():
+    def update():
+        ...
+        
+    def display():
+        ...
+
+
+
+
+
+
+
+
+
+
 class App:
     def __init__(self, screen) -> None:
         self.scene = Helo()
         self.screen = screen
-
+        self.FPS = 60
+        self.mods = [Helo(),AutoBuy()]
+        
 
     def run(self):
         run = True
+        clock = pygame.time.Clock()
+        
+        killApp = KillApp('t')
+        
         while run:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -116,19 +138,20 @@ class App:
 
 
             # update
-            #run = killApp.update()    
+            run = killApp.update()    
             
             
 
             # display
             self.screen.fill((0, 0, 0))
-            #killApp.display()
+            killApp.display()
             
-            pygame.draw.rect(self.screen,(10,10,10),(0,0,width,height),1) # temp boundary
+            pygame.draw.rect(self.screen,(200,200,10),(0,0,width,height),2) # temp boundary
 
 
 
             pygame.display.update()
+            clock.tick(self.FPS)
         pygame.quit()
 
 
